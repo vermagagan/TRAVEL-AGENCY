@@ -1,0 +1,657 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+public class TRAVEL_AGENCY
+{
+    public static Scanner in = new Scanner(System.in);
+    public static class Node
+    {
+        String name;
+        int number;
+        double balancee;
+        char categ;
+        char travelPackage;
+        int act[]=new int[9];
+        Node next;
+        public Node(String name, int number, char travelPackage, double balancee, char categ, int act[])
+        {
+            this.name=name;
+            this.number=number;
+            this.travelPackage=travelPackage;
+            this.balancee=balancee;
+            this.categ=categ;
+            this.act=act;
+            this.next=null;
+        }
+    }
+    public static char c;
+    public static passengerNodeE head;
+    public static Node headNode;
+    public static Node tailNode;
+    public static int activity[]=new int[9];
+    public static int eeCapacity;
+    public static int ceCapacity;
+    public static int iaCapacity;
+    public static HashMap<Integer, Integer> activitycount_Eeurope = new HashMap<>();
+    public static HashMap<Integer, Integer> activitycount_Ceurope = new HashMap<>();
+    public static HashMap<Integer, Integer> activitycount_Iamerica = new HashMap<>();
+    public static HashMap<Integer, String> activitiessE=new HashMap<>();
+    public static HashMap<Integer, String> activitiessC=new HashMap<>();
+    public static HashMap<Integer, String> activitiessI=new HashMap<>();
+    public static void main(String args[])
+    {
+        int n;
+        System.out.println("Enter the number of Passengers");
+        n=in.nextInt();
+        values();
+        passenger(n);
+        print();
+        Remaining_seats();
+    }
+    public static void values()
+    {
+        activitycount_Eeurope.put(0,10);
+        activitycount_Eeurope.put(1,10);
+        activitycount_Eeurope.put(2,10);
+        activitycount_Eeurope.put(3,10);
+        activitycount_Eeurope.put(4,10);
+        activitycount_Eeurope.put(5,10);
+        activitycount_Eeurope.put(6,10);
+        activitycount_Eeurope.put(7,10);
+        activitycount_Eeurope.put(8,10);
+        
+        activitycount_Ceurope.put(0,10);
+        activitycount_Ceurope.put(1,10);
+        activitycount_Ceurope.put(2,10);
+        activitycount_Ceurope.put(3,10);
+        activitycount_Ceurope.put(4,10);
+        activitycount_Ceurope.put(5,10);
+        activitycount_Ceurope.put(6,10);
+        activitycount_Ceurope.put(7,10);
+        activitycount_Ceurope.put(8,10);
+        
+        activitycount_Iamerica.put(0,10);
+        activitycount_Iamerica.put(1,10);
+        activitycount_Iamerica.put(2,10);
+        activitycount_Iamerica.put(3,10);
+        activitycount_Iamerica.put(4,10);
+        activitycount_Iamerica.put(5,10);
+        activitycount_Iamerica.put(6,10);
+        activitycount_Iamerica.put(7,10);
+        activitycount_Iamerica.put(8,10);
+        
+        activitiessE.put(0, "Colosseum");
+        activitiessE.put(1, "Pantheon");
+        activitiessE.put(2, "Duomo di Milano");
+        activitiessE.put(3, "The British Museum");
+        activitiessE.put(4, "Tower of London");
+        activitiessE.put(5, "Hyde Park");
+        activitiessE.put(6, "Eiffel Tower");
+        activitiessE.put(7, "Louvre Museum");
+        activitiessE.put(8, "Arc de Triomphe");
+        
+        activitiessC.put(0, "Atomium");
+        activitiessC.put(1, "Gravensteen");
+        activitiessC.put(2, "Belfry of Bruges");
+        activitiessC.put(3, "Sanssouci Palace");
+        activitiessC.put(4, "Berliner Fernsehtrum");
+        activitiessC.put(5, "Europa-Park");
+        activitiessC.put(6, "Hofburg");
+        activitiessC.put(7, "Fortress Hohesalzburg");
+        activitiessC.put(8, "Albertina");
+        
+        activitiessI.put(0, "New York");
+        activitiessI.put(1, "Time Square");
+        activitiessI.put(2, "9/11 Memorial & Museum");
+        activitiessI.put(3, "The Neon Museum");
+        activitiessI.put(4, "Hoover Dam");
+        activitiessI.put(5, "Titanic: The Artifact Exhibition");
+        activitiessI.put(6, "Alcatraz Island");
+        activitiessI.put(7, "Oracle");
+        activitiessI.put(8, "Coit Tower");
+        eeCapacity=100;
+        ceCapacity=100;
+        iaCapacity=100;
+    }
+    public static void passenger(int n)
+    {
+        String Name;
+        for(int i=0;i<n;i++)
+        {
+            System.out.println("Enter name of passenger");
+            Name=in.next();
+            int ch;
+            System.out.println("Enter your Choice");
+            System.out.println("1 if Passenger is Standard Passenger\n2 if Passenger is Gold Passenger\n3 if Passenger is Premium Passenger\n0 to Terminate for this passenger");
+            ch=in.nextInt();
+            while(ch!=0&&ch!=1&&ch!=2&&ch!=3)
+            {
+                System.out.println("You have entered wrong input please enter either 1,2 or 3 and to terminate for this passenger enter 0");
+                ch=in.nextInt();
+                while(ch<0&&ch>3)
+                {
+                System.out.println("You have entered wrong input please enter either 1,2 or 3 and to terminate for this passenger enter 0");
+                ch=in.nextInt();
+                }
+            }
+            switch (ch)
+            {
+                case 1:
+                Standard_Passenger(Name,i);
+                break;
+                case 2:
+                Gold_Passenger(Name,i);
+                break;
+                case 3:
+                Premium_Passenger(Name,i);
+                break;
+                default:
+                System.out.println("Terminated!!");
+            }
+        }
+    }
+    public static void Standard_Passenger(String Name, int num)
+    {
+        double balance=10000.0;//Predefined Balance given to Standard Passengers for their expense(included in Standard Membership)
+        PACKAGES(Name,num,balance,'S');
+    }
+    public static void Gold_Passenger(String Name, int num)
+    {
+        double balance=25000.0;//Predefined Balance given to Gold Passengers for their expense(included in Gold Membership)
+        PACKAGES(Name,num,balance,'G');
+    }
+    public static void Premium_Passenger(String Name, int num)
+    {
+        double balance=Double.MAX_VALUE;//Predefined Balance given to Standard Passengers fro their expense(included in Standard Membership)
+        PACKAGES(Name,num,balance,'P');
+    }
+    public static int count(int count)
+    {
+        while(count!=0&&count!=1&&count!=2&&count!=3)
+        {
+            System.out.println("Wrong input given either input 1,2,3 or enter 0 to terminate");
+            count=in.nextInt();
+        }
+        return count;
+    }
+    public static void PACKAGES(String Name, int num, double balance, char category)
+    {
+        int count;
+        System.out.println("Enter your Choice");
+        System.out.println("1 for Exotic Europe");
+        System.out.println("    List of Destinations & Activities available:");
+        System.out.println("        (a)Italy");
+        System.out.println("            (i)Colosseum\n            (ii)Pantheon\n            (iii)Duomo di Milano");
+        System.out.println("        (b)England");
+        System.out.println("            (i)The British Museum\n            (ii)Tower of London\n            (iii)Hyde Park");
+        System.out.println("        (c)France");
+        System.out.println("            (i)Eiffel Tower\n            (ii)Louvre Museum\n            (iii)Arc de Triomphe");
+        
+        System.out.println("2 for Classic Europe");
+        System.out.println("    List of Destinations & Activities available:");
+        System.out.println("        (a)Belgium");
+        System.out.println("            (i)Atomium\n            (ii)Gravensteen\n            (iii)Belfry of Bruges");
+        System.out.println("        (b)Germany");
+        System.out.println("            (i)Sanssouci Palace\n            (ii)Berliner Fernsehturm\n            (iii)Europa-Park");
+        System.out.println("        (c)Austria");
+        System.out.println("            (i)Hofburg\n            (ii)Fortress Hohensalzburg\n            (iii)Albertina");
+        
+        System.out.println("3 for Incredible America");
+        System.out.println("    List of Destinations & Activities available:");
+        System.out.println("        (a)New York");
+        System.out.println("            (i)Empire State Building\n            (ii)Time Square\n            (iii)9/11 Memorial & Museum");
+        System.out.println("        (b)Las Vegas");
+        System.out.println("            (i)The Neon Museum\n            (ii)Hoover Dam\n            (iii)Titanic:The Artifact Exhibition");
+        System.out.println("        (c)San Francisco");
+        System.out.println("            (i)Alcatraz Island\n            (ii)Oracle Park\n            (iii)Coit Tower");
+        count=in.nextInt();
+        count=count(count);
+        if(count==1 && eeCapacity==0)
+        {
+            System.out.println("The Capacity for Exotic Europe Travel Package is full Please Either choose other Options or enter 0 to TERMINATE the process");
+            count=count(count);
+        }
+        else if(count==2 && ceCapacity==0)
+        {
+            System.out.println("The Capacity for Classic Europe Travel Package is full Please Either choose other Options or enter 0 to TERMINATE the process");
+            count=count(count);
+        }
+        else if(count==3 && iaCapacity==0)
+        {
+            System.out.println("The Capacity for Incredible America Travel Package is full Please Either choose other Options or enter 0 to TERMINATE the process");
+            count=count(count);
+        }
+        else if(eeCapacity==0&&ceCapacity==0&&iaCapacity==0)
+        {
+            System.out.println("All travel packages are full");
+        }
+        switch(count)
+        {
+            case 1:
+            Exotic_Europe(Name,num,balance,category);
+            break;
+            case 2:
+            Classic_Europe(Name,num,balance,category);
+            break;
+            case 3:
+            Incredible_America(Name,num,balance,category);
+            break;
+            default:
+            System.out.println("TERMINATED!!");
+        }
+    }
+    public static void Exotic_Europe(String Name, int num, double balance, char category)
+    {
+        c='E';
+        eeCapacity--;
+        ArrayList<String> passengers_List=new ArrayList<>();
+        passengers_List.add(Name);
+        System.out.println("List of Activities with their cost below");
+        System.out.println("    (1)Colosseum--->₹1,431.06\n    (2)Pantheon--->₹447\n    (3)Duomo di Milano--->₹4,599");
+        System.out.println("    (4)The British Museum--->₹2,000\n    (5)Tower of London--->₹3,879.06\n    (6)Hyde Park--->₹3,036.47");
+        System.out.println("    (7)Eiffel Tower--->₹1,898\n    (8)Louvre Museum--->₹1,967.76\n    (9)Arc de Triomphe--->₹1,162.71");
+        HashMap<Integer, Double> tickets=new HashMap<>();
+        tickets.put(0, 1431.06);
+        tickets.put(1, 447.0);
+        tickets.put(2, 4599.0);
+        tickets.put(3, 2000.0);
+        tickets.put(4, 3879.06);
+        tickets.put(5, 3036.47);
+        tickets.put(6, 1898.0);
+        tickets.put(7, 1967.76);
+        tickets.put(8, 1162.71);
+        if(category!='P')
+        {
+            if(category=='S')
+            {
+                for(int i=0;i<9;i++)
+                {
+                    if(balance>=tickets.get(i))
+                    {
+                        System.out.println("Would you like to do the activity number "+(i+1)+" from the list above\nIf yes then Enter 1\nIf no then Enter 0");
+                        activity[i]=in.nextInt();
+                        if(activity[i]==1)
+                        {
+                            if(activitycount_Eeurope.get(i)==0)
+                            {
+                                System.out.println("This Activity is full already, Please select others");
+                                activity[i]=0;
+                            }
+                            else
+                            {
+                                balance=balance-tickets.get(i);
+                                activitycount_Eeurope.put(i, activitycount_Eeurope.get(i)-1);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("You do not have sufficient Balance for this Activity");
+                        activity[i]=0;
+                    }
+                }
+            }
+            else
+            {
+                for(int i=0;i<9;i++)
+                {
+                    if(balance>tickets.get(i))
+                    {
+                        System.out.println("Would you like to do the activity number "+(i+1)+" from the list above\nIf yes then Enter 1\nIf no then Enter 0");
+                        activity[i]=in.nextInt();
+                        if(activity[i]==1)
+                        {
+                            double temp=0.0;
+                            if(activitycount_Eeurope.get(i)!=0)
+                            {
+                                temp=tickets.get(i)-(0.1*tickets.get(i));
+                                activitycount_Eeurope.put(i, activitycount_Eeurope.get(i)-1);
+                            }
+                            else
+                            {
+                                System.out.println("This Activity is full already, Please select others");
+                                activity[i]=0;
+                            }
+                            balance=balance-temp;
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("You do not have sufficient Balance for this Activity");
+                        activity[i]=0;
+                    }
+                }
+            }
+        }
+        else
+        {
+            for(int i=0;i<9;i++)
+            {
+                System.out.println("Would you like to do the activity number "+(i+1)+" from the list above\nIf yes then Enter 1\nIf no then Enter 0");
+                activity[i]=in.nextInt();
+                if(activitycount_Eeurope.get(i)!=0)
+                    {
+                        activitycount_Eeurope.put(i, activitycount_Eeurope.get(i)-1);
+                    }
+                    else
+                    {
+                        System.out.println("This Activity is full already, Please select others");
+                        activity[i]=0;
+                    }
+            }
+        }
+        store(Name, num, c, balance, category, activity);
+    }
+    public static void Classic_Europe(String Name, int num, double balance, char category)
+    {
+        c='C';
+        ArrayList<String> passengers_List=new ArrayList<>();
+        passengers_List.add(Name);
+        System.out.println("List of Activities with their cost below");
+        System.out.println("    (1)Atomium--->₹1,831.06\n    (2)Gravensteen--->₹1,447.02\n    (3)Belfry of Bruges--->₹3,499.02");
+        System.out.println("    (4)Sanssouci Palace--->₹2,230.02\n    (5)Berlin Fernsehturm--->₹3,349.06\n    (6)Europa-Park--->₹4,136.47");
+        System.out.println("    (7)Hofburg--->₹1,498\n    (8)Fortress Hohensalzburg--->₹2,731.76\n    (9)Albertina--->₹1,292.51");
+        HashMap<Integer, Double> tickets=new HashMap<>();
+        tickets.put(0, 1831.06);
+        tickets.put(1, 1447.02);
+        tickets.put(2, 3499.02);
+        tickets.put(3, 2230.02);
+        tickets.put(4, 3349.06);
+        tickets.put(5, 4136.47);
+        tickets.put(6, 1498.0);
+        tickets.put(7, 2731.76);
+        tickets.put(8, 1292.51);
+        if(category!='P')
+        {
+            if(category=='S')
+            {
+                for(int i=0;i<9;i++)
+                {
+                    if(balance>tickets.get(i))
+                    {
+                        System.out.println("Would you like to do the activity number "+(i+1)+" from the list above\nIf yes then Enter 1\nIf no then Enter 0");
+                        activity[i]=in.nextInt();
+                        if(activity[i]==1)
+                        {
+                            if(activitycount_Ceurope.get(i)!=0)
+                            {
+                                balance=balance-tickets.get(i);
+                                activitycount_Ceurope.put(i, activitycount_Ceurope.get(i)-1);
+                            }
+                            else
+                            {
+                                System.out.println("This Activity is full already, Please select others");
+                                activity[i]=0;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("You do not have sufficient Balance for this Activity");
+                        activity[i]=0;
+                    }
+                }
+            }
+            else
+            {
+                for(int i=0;i<9;i++)
+                {
+                    if(balance>tickets.get(i))
+                    {
+                        System.out.println("Would you like to do the activity number "+(i+1)+" from the list above\nIf yes then Enter 1\nIf no then Enter 0");
+                        activity[i]=in.nextInt();
+                        if(activity[i]==1)
+                        {
+                            double temp=0.0;
+                            if(activitycount_Ceurope.get(i)!=0)
+                            {
+                                temp=tickets.get(i)-(0.1*tickets.get(i));
+                                activitycount_Ceurope.put(i, activitycount_Ceurope.get(i)-1);
+                            }
+                            
+                            else
+                            {
+                                System.out.println("This Activity is full already, Please select others");
+                                activity[i]=0;
+                            }
+                            balance=balance-temp;
+                        }
+                    }
+                    else
+                    {
+                        System.out.println("You do not have sufficient Balance for this Activity");
+                        activity[i]=0;
+                    }
+                }
+            }
+        }
+        else
+        {
+            
+            for(int i=0;i<9;i++)
+            {
+                System.out.println("Would you like to do the activity number "+(i+1)+" from the list above\nIf yes then Enter 1\nIf no then Enter 0");
+                activity[i]=in.nextInt();
+                if(activitycount_Ceurope.get(i)!=0)
+                    {
+                        activitycount_Ceurope.put(i, activitycount_Ceurope.get(i)-1);
+                    }
+                    else
+                    {
+                        System.out.println("This Activity is full already, Please select others");
+                        activity[i]=0;
+                    }
+            }
+        }
+        ceCapacity--;
+        store(Name, num, c, balance, category, activity);
+    }
+    public static void Incredible_America(String Name, int num, double balance, char category)
+    {
+        c='I';
+        ArrayList<String> passengers_List=new ArrayList<>();
+            passengers_List.add(Name);
+            System.out.println("List of Activities with their cost below");
+            System.out.println("    (1)Empire State Building--->₹2,983.06\n    (2)Time Square--->₹3,127.02\n    (3)9/11 Memorial & Museum--->₹1,299.02");
+            System.out.println("    (4)The Neon Museum--->₹1,430.02\n    (5)Hoover Dam--->₹1,339.06\n    (6)Titanic:The Artifact Exhibition--->₹446.47");
+            System.out.println("    (7)Alcatraz Island--->₹7,000.35\n    (8)Oracle Park--->₹2,721.76\n    (9)Coit Tower--->₹992.51");
+            HashMap<Integer, Double> tickets=new HashMap<>();
+            tickets.put(0, 2983.06);
+            tickets.put(1, 3127.02);
+            tickets.put(2, 1299.02);
+            tickets.put(3, 1430.02);
+            tickets.put(4, 1339.06);
+            tickets.put(5, 446.47);
+            tickets.put(6, 7000.35);
+            tickets.put(7, 2721.76);
+            tickets.put(8, 992.51);
+            if(category!='P')
+            {
+                if(category=='S')
+                {
+                    for(int i=0;i<9;i++)
+                    {
+                        if(balance>tickets.get(i))
+                        {
+                            System.out.println("Would you like to do the activity number "+(i+1)+" from the list above\nIf yes then Enter 1\nIf no then Enter 0");
+                            activity[i]=in.nextInt();
+                            if(activity[i]==1)
+                            {
+                                if(activitycount_Iamerica.get(i)!=0)
+                                {
+                                    balance=balance-tickets.get(i);
+                                    activitycount_Iamerica.put(i, activitycount_Iamerica.get(i)-1);
+                                }
+                                else
+                                {
+                                    System.out.println("This Activity is full already, Please select others");
+                                    activity[i]=0;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("You do not have sufficient Balance for this Activity");
+                            activity[i]=0;
+                        }
+                    }
+                }
+                else
+                {
+                    for(int i=0;i<9;i++)
+                    {
+                        if(balance>tickets.get(i))
+                        {
+                            System.out.println("Would you like to do the activity number "+(i+1)+" from the list above\nIf yes then Enter 1\nIf no then Enter 0");
+                            activity[i]=in.nextInt();
+                            if(activity[i]==1)
+                            {
+                                double temp=0.0;
+                                if(activitycount_Iamerica.get(i)!=0)
+                                {
+                                    temp=tickets.get(i)-(0.1*tickets.get(i));
+                                    activitycount_Iamerica.put(i, activitycount_Iamerica.get(i)-1);
+                                }
+                                
+                                else
+                                {
+                                    System.out.println("This Activity is full already, Please select others");
+                                    activity[i]=0;
+                                }
+                                balance=balance-temp;
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("You do not have sufficient Balance for this Activity");
+                            activity[i]=0;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                
+                for(int i=0;i<9;i++)
+                {
+                    System.out.println("Would you like to do the activity number "+(i+1)+" from the list above\nIf yes then Enter 1\nIf no then Enter 0");
+                    activity[i]=in.nextInt();
+                    if(activitycount_Iamerica.get(i)!=0)
+                    {
+                        activitycount_Iamerica.put(i, activitycount_Iamerica.get(i)-1);
+                    }
+                    else
+                    {
+                        System.out.println("This Activity is full already, Please select others");
+                        activity[i]=0;
+                    }
+                }
+            }
+        iaCapacity--;
+        store(Name, num, c, balance, category, activity);
+    }
+    public static void store(String Name, int num, char c, double balance, char category, int [] activity)
+    {
+        
+        Node newNode=new Node(Name, num, c, balance, category, activity);
+        if(headNode==null)
+        {
+            headNode=tailNode=newNode;
+        }
+        else
+        {
+            tailNode.next=newNode;
+            tailNode=newNode;
+        }
+    }
+    public static void print()
+    {
+        Node temp=headNode;
+        while(temp!=null)
+        {
+            
+        System.out.println("NAME: "+temp.name);
+        System.out.println("Number: "+(int)(temp.number+1));
+        if(temp.travelPackage=='E')
+        System.out.println("Travel Package: Exotic Europe");
+        else if(temp.travelPackage=='C')
+        System.out.println("Travel Package: Classic Europe");
+        else
+        System.out.println("Travel Package: Incredible America");
+        if(temp.categ!='P')
+        System.out.println("Remaining Balance: "+temp.balancee);
+        if(temp.categ=='S')
+        System.out.println("Passenger category: Standard");
+        else if(temp.categ=='G')
+        System.out.println("Passenger category: Gold");
+        else
+        System.out.println("Passenger category: Premium");
+        passengerActivities(temp.travelPackage);
+        temp=temp.next;
+        }
+    }
+    public static void passengerActivities(char tp)
+    {
+        if(tp=='E')
+        {
+            System.out.println("The Activities selected by Passenger are: ");
+            for(int i=0;i<9;i++)
+            {
+                if(activity[i]==1)
+                {
+                    System.out.println(activitiessE.get(i));
+                }
+            }
+        }
+        else if(tp=='C')
+        {
+            System.out.println("The Activities selected by Passenger are: ");
+            for(int i=0;i<9;i++)
+            {
+                if(activity[i]==1)
+                {
+                    System.out.println(activitiessC.get(i));
+                }
+            }
+        }
+        else
+        {
+            System.out.println("The Activities selected by Passenger are: ");
+            for(int i=0;i<9;i++)
+            {
+                if(activity[i]==1)
+                {
+                    System.out.println(activitiessI.get(i));
+                }
+            }
+        }
+    }
+    public static void Remaining_seats()
+    {
+        System.out.println("Remaining Seats for activities are:");
+        System.out.println("    (a)In Exoctic Europe Package:");
+        for(int i=0;i<9;i++)
+        {
+            if(activitycount_Eeurope.get(i)!=0)
+            {
+                System.out.println("        "+activitiessE.get(i)+"----->"+activitycount_Eeurope.get(i));
+            }
+        }
+        System.out.println("    (b)In Classic Europe Package:");
+        for(int i=0;i<9;i++)
+        {
+            if(activitycount_Ceurope.get(i)!=0)
+            {
+                System.out.println("        "+activitiessC.get(i)+"----->"+activitycount_Ceurope.get(i));
+            }
+        }
+        System.out.println("    (c)In Incredible America Package:");
+        for(int i=0;i<9;i++)
+        {
+            if(activitycount_Iamerica.get(i)!=0)
+            {
+                System.out.println("        "+activitiessI.get(i)+"----->"+activitycount_Iamerica.get(i));
+            }
+        }
+    }
+}
